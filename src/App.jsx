@@ -4,7 +4,19 @@ import { useState } from "react";
 export default function App() {
   const [inputValue, setinputValue] = useState("");
   const [tasks, setTasks] = useState([]);
-  // const [alertIsOpen, setAlertIsOpen] = useState(false)
+
+  const editTask = (indexToEdit) => {
+    const newText = prompt("Edit your task:", tasks[indexToEdit]);
+
+    // If they typed something and didn't hit cancel
+    if (newText) {
+      // .map() creates a new array just like .filter()
+      const updatedTasks = tasks.map((task, index) =>
+        index === indexToEdit ? newText : task
+      );
+      setTasks(updatedTasks);
+    }
+  };
 
   const addbtn = () => {
     if (inputValue === "") {
@@ -14,6 +26,13 @@ export default function App() {
     setTasks([...tasks, inputValue]);
     setinputValue("")
   }
+
+  const deleteBtn = (indexToDelete) => {
+    const newTasks = tasks.filter((_, index) => index !== indexToDelete);
+    setTasks(newTasks)
+  }
+
+
 
   return (
     <div className="h-screen flex flex-col items-center bg-slate-50 py-12">
@@ -32,20 +51,42 @@ export default function App() {
             Add
           </button>
         </div>
-        <div className="flex space-y-3">
+        <div className="space-y-3">
           {tasks.length === 0
             ?
             (<p className="text-gray-400 text-center italic flex-1">No tasks yet. Add one!</p>)
             :
             (
               tasks.map((task, index) => (
-                <p 
-                key={index}
-                className="text-black  flex-1 bg-gray-100 py-3 px-4 rounded-lg">{task}</p>
+                <li key={index} className="flex justify-between items-center bg-gray-50 p-2 rounded border border-gray-300 ">
+                  <span>{task}</span>
+                  <div className="flex-items-center gap-5">
+                    <button
+                      onClick={() => editTask(index)}
+                      className="text-blue-500 hover:bg-blue-100 px-2 py-1 rounded text-sm"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => deleteBtn(index)}
+                      className="text-red-500 hover:bg-red-100 px-2 py-1 rounded text-sm"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </li>
               ))
             )
           }
         </div>
+        {tasks.length > 0 && (
+          <div className="flex py-3 border-t border-gray-100 justify-between items-center">
+            <p className="text-black text-sm">{tasks.length} tasks remaining</p>
+            <button
+              onClick={() => setTasks([])}
+              className="text-red-500  hover:underline">Clear</button>
+          </div>
+        )}
       </div>
     </div>
   )
