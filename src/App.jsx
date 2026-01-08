@@ -6,11 +6,11 @@ export default function App() {
   const [tasks, setTasks] = useState([]);
 
   const editTask = (indexToEdit) => {
-    const newText = prompt("Edit your task:", tasks[indexToEdit]);
+    const newText = prompt("Edit your task:", tasks[indexToEdit]);  
 
-    // If they typed something and didn't hit cancel
-    if (newText) {
-      // .map() creates a new array just like .filter()
+
+    //if the input is not empty run else dont
+    if (newText && newText.trim() !== "") {
       const updatedTasks = tasks.map((task, index) =>
         index === indexToEdit ? newText : task
       );
